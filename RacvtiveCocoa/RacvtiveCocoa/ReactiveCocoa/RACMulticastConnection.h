@@ -23,6 +23,10 @@
 ///
 /// Note that you shouldn't create RACMulticastConnection manually. Instead use
 /// -[RACSignal publish] or -[RACSignal multicast:].
+
+// RACMulticastConnection 封装了将一个信号的订阅分享给多个订阅者的思想
+// 用于创建信号的 block 不需要每次都调用或者会有副作用
+
 @interface RACMulticastConnection : NSObject
 
 /// The multicasted signal.

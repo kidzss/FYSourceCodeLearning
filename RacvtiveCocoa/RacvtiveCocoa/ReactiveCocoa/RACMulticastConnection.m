@@ -35,6 +35,10 @@
 
 #pragma mark Lifecycle
 
+// 不应该直接使用 -initWithSourceSignal:subject: 来初始化一个对象，我们应该通过 RACSignal 的实例方法初始化 RACMulticastConnection 实例
+
+// 传入源 signal
+// subject 用于广播的信号
 - (id)initWithSourceSignal:(RACSignal *)source subject:(RACSubject *)subject {
 	NSCParameterAssert(source != nil);
 	NSCParameterAssert(subject != nil);
