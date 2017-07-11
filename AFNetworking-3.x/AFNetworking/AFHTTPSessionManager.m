@@ -100,6 +100,7 @@
 
 @dynamic securityPolicy;
 
+// 设置安全策略
 - (void)setSecurityPolicy:(AFSecurityPolicy *)securityPolicy {
     if (securityPolicy.SSLPinningMode != AFSSLPinningModeNone && ![self.baseURL.scheme isEqualToString:@"https"]) {
         NSString *pinningMode = @"Unknown Pinning Mode";
@@ -132,6 +133,7 @@
                       success:(void (^)(NSURLSessionDataTask * _Nonnull, id _Nullable))success
                       failure:(void (^)(NSURLSessionDataTask * _Nullable, NSError * _Nonnull))failure
 {
+    // 获取 task 对象
 
     NSURLSessionDataTask *dataTask = [self dataTaskWithHTTPMethod:@"GET"
                                                         URLString:URLString
@@ -141,6 +143,7 @@
                                                           success:success
                                                           failure:failure];
 
+    // 执行 task
     [dataTask resume];
 
     return dataTask;

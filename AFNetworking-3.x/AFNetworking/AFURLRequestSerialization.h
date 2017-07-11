@@ -19,6 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+// 创建 request 对象
+
 #import <Foundation/Foundation.h>
 #import <TargetConditionals.h>
 

@@ -19,6 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+// 对 SystemConfiguration 模块的封装
+
 #import <Foundation/Foundation.h>
 
 #if !TARGET_OS_WATCH

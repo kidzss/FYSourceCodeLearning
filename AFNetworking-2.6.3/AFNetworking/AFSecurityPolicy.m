@@ -48,6 +48,7 @@ static BOOL AFSecKeyIsEqualToKey(SecKeyRef key1, SecKeyRef key2) {
 #endif
 }
 
+// 从证书 data 中获取公钥
 static id AFPublicKeyForCertificate(NSData *certificate) {
     id allowedPublicKey = nil;
     SecCertificateRef allowedCertificate;
@@ -57,6 +58,7 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
     SecTrustRef allowedTrust = nil;
     SecTrustResultType result;
 
+    //取证书SecCertificateRef -> 生成证书数组 -> 生成SecTrustRef -> 从SecTrustRef取PublicKey
     allowedCertificate = SecCertificateCreateWithData(NULL, (__bridge CFDataRef)certificate);
     __Require_Quiet(allowedCertificate != NULL, _out);
 
@@ -89,6 +91,7 @@ _out:
     return allowedPublicKey;
 }
 
+// 验证证书
 static BOOL AFServerTrustIsValid(SecTrustRef serverTrust) {
     BOOL isValid = NO;
     SecTrustResultType result;
@@ -100,6 +103,7 @@ _out:
     return isValid;
 }
 
+// 取出服务端返回的所有证书
 static NSArray * AFCertificateTrustChainForServerTrust(SecTrustRef serverTrust) {
     CFIndex certificateCount = SecTrustGetCertificateCount(serverTrust);
     NSMutableArray *trustChain = [NSMutableArray arrayWithCapacity:(NSUInteger)certificateCount];
@@ -150,15 +154,18 @@ static NSArray * AFPublicKeyTrustChainForServerTrust(SecTrustRef serverTrust) {
 
 @interface AFSecurityPolicy()
 @property (readwrite, nonatomic, assign) AFSSLPinningMode SSLPinningMode;
+// 公钥数组
 @property (readwrite, nonatomic, strong) NSArray *pinnedPublicKeys;
 @end
 
 @implementation AFSecurityPolicy
 
+// 证书列表
 + (NSArray *)defaultPinnedCertificates {
     static NSArray *_defaultPinnedCertificates = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
+        // 加载本地 .cer 的证书
         NSBundle *bundle = [NSBundle bundleForClass:[self class]];
         NSArray *paths = [bundle pathsForResourcesOfType:@"cer" inDirectory:@"."];
 
@@ -196,6 +203,7 @@ static NSArray * AFPublicKeyTrustChainForServerTrust(SecTrustRef serverTrust) {
         return nil;
     }
 
+    // 默认验证请求域名
     self.validatesDomainName = YES;
 
     return self;
@@ -225,6 +233,7 @@ static NSArray * AFPublicKeyTrustChainForServerTrust(SecTrustRef serverTrust) {
     return [self evaluateServerTrust:serverTrust forDomain:nil];
 }
 
+// 验证证书
 - (BOOL)evaluateServerTrust:(SecTrustRef)serverTrust
                   forDomain:(NSString *)domain
 {
@@ -304,7 +313,8 @@ static NSArray * AFPublicKeyTrustChainForServerTrust(SecTrustRef serverTrust) {
     return [NSSet setWithObject:@"pinnedCertificates"];
 }
 
-#pragma mark - NSSecureCoding
+
+#pragma mark - NSSecureCoding 归档 解档
 
 + (BOOL)supportsSecureCoding {
     return YES;

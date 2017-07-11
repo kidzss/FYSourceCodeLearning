@@ -207,6 +207,7 @@ static void AFNetworkReachabilityReleaseCallback(const void *info) {
     }
 
     __weak __typeof(self)weakSelf = self;
+    // 网络状态变化监听 block
     AFNetworkReachabilityStatusBlock callback = ^(AFNetworkReachabilityStatus status) {
         __strong __typeof(weakSelf)strongSelf = weakSelf;
 
@@ -234,6 +235,7 @@ static void AFNetworkReachabilityReleaseCallback(const void *info) {
         return;
     }
 
+    // 取消在 main Runloop 中的监听
     SCNetworkReachabilityUnscheduleFromRunLoop(self.networkReachability, CFRunLoopGetMain(), kCFRunLoopCommonModes);
 }
 
