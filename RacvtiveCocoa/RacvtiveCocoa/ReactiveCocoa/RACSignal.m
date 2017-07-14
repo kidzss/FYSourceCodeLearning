@@ -107,6 +107,8 @@
 	 * If any signal sends an error at any point, send that to the subscriber.
 	 */
 
+    // 创建一个新的信号
+    
 	return [[RACSignal createSignal:^(id<RACSubscriber> subscriber) {
         
         // RACStreamBindBlock 传入 NSObject，返回 RACSignal，转换的 block

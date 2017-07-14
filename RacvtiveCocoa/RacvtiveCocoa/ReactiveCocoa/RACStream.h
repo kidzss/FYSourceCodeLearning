@@ -19,7 +19,9 @@
 /// value. Returning `nil` will result in immediate termination.
 typedef RACStream * (^RACStreamBindBlock)(id value, BOOL *stop);
 
-// 一个抽象类，代表一个流数据
+// 一个抽象类，代表一个流数据，代表一个 monad
+// 在其上有很多的数据流操作
+
 /// An abstract class representing any stream of values.
 ///
 /// This class represents a monad, upon which many stream-based operations can
@@ -29,8 +31,12 @@ typedef RACStream * (^RACStreamBindBlock)(id value, BOOL *stop);
 /// to be overridden.
 @interface RACStream : NSObject
 
+// 返回一个空的 stream
 /// Returns an empty stream.
 + (instancetype)empty;
+
+// 根据传入的 value 创建一个 stream
+// 相当于把 UIKit 中的 NSObject 转换为 RACSignal
 
 /// Lifts `value` into the stream monad.
 ///

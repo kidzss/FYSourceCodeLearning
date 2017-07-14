@@ -55,9 +55,13 @@
 
 #pragma mark Connecting
 
+// 只有在调用 -connect 方法之后，RACSubject 才会订阅源信号 sourceSignal
+// -connect 方法通过 -subscribe: 实际上建立了 RACSignal 和 RACSubject 之间的连接，这种方式保证了 RACSignal 中的 didSubscribe 代码块只执行了一次。
+// 所有的订阅者不再订阅原信号，而是订阅 RACMulticastConnection 持有的热信号 RACSubject，实现对冷信号的一对多传播。
 - (RACDisposable *)connect {
 	BOOL shouldConnect = OSAtomicCompareAndSwap32Barrier(0, 1, &_hasConnected);
 
+    // 订阅源信号，这时源信号的 didSubscribe 代码块才会执行
 	if (shouldConnect) {
 		self.serialDisposable.disposable = [self.sourceSignal subscribe:_signal];
 	}
@@ -65,6 +69,8 @@
 	return self.serialDisposable;
 }
 
+
+// 保证了在 -autoconnect 方法返回的对象被第一次订阅时，就会建立源信号与热信号之间的连接
 - (RACSignal *)autoconnect {
 	__block volatile int32_t subscriberCount = 0;
 

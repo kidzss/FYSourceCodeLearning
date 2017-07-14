@@ -14,6 +14,8 @@
 @class RACSubject;
 @protocol RACSubscriber;
 
+// RACSignal 是一个类簇，会根据不同初始化方法返回不同的子类
+
 @interface RACSignal : RACStream
 
 /// Creates a new signal. This is the preferred way to create a new signal

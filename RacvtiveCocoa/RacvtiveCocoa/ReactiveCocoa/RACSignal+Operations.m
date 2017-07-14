@@ -934,12 +934,16 @@ static RACDisposable *subscribeForever (RACSignal *signal, void (^next)(id), voi
 	return [[RACSignalSequence sequenceWithSignal:self] setNameWithFormat:@"[%@] -sequence", self.name];
 }
 
+// publish 和 multicast 两个方法是对 RACMulticastConnection 类初始化方法的封装
 - (RACMulticastConnection *)publish {
 	RACSubject *subject = [[RACSubject subject] setNameWithFormat:@"[%@] -publish", self.name];
 	RACMulticastConnection *connection = [self multicast:subject];
 	return connection;
 }
 
+// 通过 signal 创建一个 RACMulticastConnection
+// 传入的 sourceSignal 就是当前信号，subject 就是用于对外广播的 RACSubject 对象
+// 使用 -publish 方法生成实例，订阅者不再订阅源信号，而是订阅 RACMulticastConnection 中的 RACSubject 热信号，最后通过 -connect 方法触发源信号中的任务
 - (RACMulticastConnection *)multicast:(RACSubject *)subject {
 	[subject setNameWithFormat:@"[%@] -multicast: %@", self.name, subject.name];
 	RACMulticastConnection *connection = [[RACMulticastConnection alloc] initWithSourceSignal:self subject:subject];

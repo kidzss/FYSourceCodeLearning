@@ -18,6 +18,8 @@
 NSString * const RACSchedulerCurrentSchedulerKey = @"RACSchedulerCurrentSchedulerKey";
 
 @interface RACScheduler ()
+
+// 用于追踪标记和 debug 的属性 name
 @property (nonatomic, readonly, copy) NSString *name;
 @end
 
